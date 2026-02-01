@@ -1,0 +1,392 @@
+.dashboard-page {
+  padding: 32px 40px;
+  background: #fafbfc;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.icon-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e8ecef;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #5a6c7d;
+}
+
+.icon-button:hover {
+  background: #f5f7fa;
+  border-color: #d1d8e0;
+}
+
+/* Top Section */
+.top-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  border: 1px solid #e8ecef;
+}
+
+/* Wallet Card */
+.wallet-card {
+  background: #f5f7fa;
+  border: 1px solid #e8ecef;
+}
+
+.wallet-card .card-label {
+  color: #8b95a5;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.wallet-amount {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.wallet-details {
+  display: flex;
+  gap: 24px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-item .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.icon.income {
+  background: #d4edda;
+  color: #27ae60;
+}
+
+.icon.expense {
+  background: #f8d7da;
+  color: #e74c3c;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: #8b95a5;
+  margin-bottom: 2px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Payable Card */
+.payable-card .card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  font-size: 0.85rem;
+  color: #8b95a5;
+  margin-bottom: 20px;
+}
+
+.progress-info {
+  margin-top: 16px;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e8ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2c3e50;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* Main Grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.transactions-card {
+  grid-column: 1;
+}
+
+.earnings-card {
+  grid-column: 2;
+}
+
+.earnings-donut-card {
+  grid-column: 3;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+}
+
+/* Transactions List */
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f7fa;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.transaction-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-name {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.transaction-date {
+  font-size: 0.85rem;
+  color: #8b95a5;
+}
+
+.transaction-amount {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+/* Earnings Card */
+.card-header-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header-inline h3 {
+  margin: 0;
+}
+
+.earnings-amount {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.chart-placeholder {
+  margin-bottom: 16px;
+  height: 150px;
+}
+
+.earnings-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.months-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #8b95a5;
+  margin-top: 8px;
+}
+
+/* Donut Chart */
+.donut-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 24px;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.donut-amount {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.donut-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #5a6c7d;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.earnings {
+  background: #2c3e50;
+}
+
+.legend-dot.goals {
+  background: #e8ecef;
+}
+
+/* Side Panels */
+.side-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.receipt-list,
+.payable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.receipt-item,
+.payable-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.receipt-icon,
+.payable-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.receipt-name,
+.payable-name {
+  font-size: 0.9rem;
+  color: #5a6c7d;
+  margin-bottom: 4px;
+}
+
+.receipt-amount,
+.payable-amount {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .top-section {
+    grid-template-columns: 1fr;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-panels {
+    grid-template-columns: 1fr;
+  }
+}

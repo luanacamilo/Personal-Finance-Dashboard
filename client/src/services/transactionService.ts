@@ -9,9 +9,7 @@ import type {
 const API_BASE_URL = '/api';
 
 class TransactionService {
-  /**
-   * Buscar todas as transações com filtros opcionais
-   */
+  
   async getAll(filters?: TransactionFilters): Promise<Transaction[]> {
     const params = new URLSearchParams();
     
@@ -31,9 +29,6 @@ class TransactionService {
     return data.data || [];
   }
 
-  /**
-   * Buscar transação por ID
-   */
   async getById(id: number): Promise<Transaction> {
     const response = await fetch(`${API_BASE_URL}/transactions/${id}`);
     
@@ -50,9 +45,6 @@ class TransactionService {
     return data.data;
   }
 
-  /**
-   * Criar nova transação
-   */
   async create(transaction: TransactionCreate): Promise<Transaction> {
     const response = await fetch(`${API_BASE_URL}/transactions`, {
       method: 'POST',
@@ -76,9 +68,6 @@ class TransactionService {
     return data.data;
   }
 
-  /**
-   * Atualizar transação existente
-   */
   async update(id: number, transaction: TransactionCreate): Promise<Transaction> {
     const response = await fetch(`${API_BASE_URL}/transactions/${id}`, {
       method: 'PUT',
@@ -102,9 +91,6 @@ class TransactionService {
     return data.data;
   }
 
-  /**
-   * Deletar transação
-   */
   async delete(id: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/transactions/${id}`, {
       method: 'DELETE'
@@ -116,9 +102,6 @@ class TransactionService {
     }
   }
 
-  /**
-   * Obter estatísticas
-   */
   async getStats(filters?: { startDate?: string; endDate?: string }): Promise<TransactionStats> {
     const params = new URLSearchParams();
     

@@ -1,4 +1,4 @@
-// Transaction types
+
 export interface Transaction {
   id: number;
   type: 'income' | 'expense';
@@ -32,14 +32,12 @@ export interface TransactionStats {
   transaction_count: number;
 }
 
-// Category types
 export interface Category {
   id: number;
   name: string;
   created_at: string;
 }
 
-// API Response types
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;

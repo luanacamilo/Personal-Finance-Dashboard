@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import Sidebar from './components/Sidebar'
+import Footer from './components/Footer'
+import DashboardPage from './pages/DashboardPage'
 import TransactionsPage from './pages/TransactionsPage'
 import categoryService from './services/categoryService'
 import type { Category } from './types'
@@ -7,6 +10,7 @@ import './App.css'
 function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState('dashboard')
 
   useEffect(() => {
     loadCategories()
@@ -27,8 +31,8 @@ function App() {
     return (
       <div className="App">
         <div className="loading-screen">
-          <h2>💰 Personal Finance Dashboard</h2>
-          <p>Carregando...</p>
+          <div className="loading-spinner"></div>
+          <p>Loading...</p>
         </div>
       </div>
     )
@@ -36,19 +40,24 @@ function App() {
 
   return (
     <div className="App">
-      <nav className="navbar">
-        <div className="nav-brand">
-          <h2>💰 Personal Finance Dashboard</h2>
-        </div>
-        <div className="nav-links">
-          <a href="#" className="active">Transações</a>
-          <a href="#">Orçamentos</a>
-          <a href="#">Analytics</a>
-        </div>
-      </nav>
-
+      <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+      
       <main className="main-content">
-        <TransactionsPage categories={categories} />
+        {currentPage === 'dashboard' && <DashboardPage />}
+        {currentPage === 'transactions' && <TransactionsPage categories={categories} />}
+        {currentPage === 'wallet' && (
+          <div className="page-placeholder">
+            <h2>Wallet</h2>
+            <p>Under development...</p>
+          </div>
+        )}
+        {currentPage === 'analytics' && (
+          <div className="page-placeholder">
+            <h2>Revenue Analytics</h2>
+            <p>Under development...</p>
+          </div>
+        )}
+        <Footer />
       </main>
     </div>
   )

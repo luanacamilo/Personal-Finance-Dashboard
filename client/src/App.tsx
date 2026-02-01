@@ -3,7 +3,11 @@ import Sidebar from './components/Sidebar'
 import Footer from './components/Footer'
 import DashboardPage from './pages/DashboardPage'
 import TransactionsPage from './pages/TransactionsPage'
+import WelcomePage from './pages/WelcomePage'
+import SetupPage from './pages/SetupPage'
+import { OnboardingProvider } from './pages/OnboardingContext'
 import categoryService from './services/categoryService'
+import userProfileService from './services/userProfileService'
 import type { Category } from './types'
 import './App.css'
 
@@ -11,19 +15,36 @@ function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState('dashboard')
+  const [onboardingStep, setOnboardingStep] = useState<'welcome' | 'setup' | 'dashboard'>('welcome')
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false)
 
   useEffect(() => {
-    loadCategories()
+    loadInitialData()
   }, [])
 
-  const loadCategories = async () => {
+  const loadInitialData = async () => {
     try {
+      // Check onboarding status
+      const status = await userProfileService.checkOnboardingStatus()
+      setOnboardingCompleted(status.completed)
+      
+      if (status.completed) {
+        setOnboardingStep('dashboard')
+      }
+
       const data = await categoryService.getAll()
       setCategories(data)
     } catch (error) {
-      console.error('Failed to load categories:', error)
+      console.error('Failed to load initial data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleOnboardingNavigate = (page: 'welcome' | 'setup' | 'dashboard') => {
+    setOnboardingStep(page)
+    if (page === 'dashboard') {
+      setOnboardingCompleted(true)
     }
   }
 
@@ -35,6 +56,16 @@ function App() {
           <p>Loading...</p>
         </div>
       </div>
+    )
+  }
+
+  // Show onboarding flow if not completed
+  if (!onboardingCompleted) {
+    return (
+      <OnboardingProvider navigate={handleOnboardingNavigate}>
+        {onboardingStep === 'welcome' && <WelcomePage />}
+        {onboardingStep === 'setup' && <SetupPage />}
+      </OnboardingProvider>
     )
   }
 

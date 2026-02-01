@@ -4,13 +4,33 @@
 -- ============================================
 
 -- Limpar tabelas existentes (CUIDADO: apaga dados!)
+DROP VIEW IF EXISTS v_budget_status;
+DROP VIEW IF EXISTS v_expenses_by_category;
+DROP VIEW IF EXISTS v_current_balance;
 DROP TABLE IF EXISTS budgets;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_profile;
 DROP TABLE IF EXISTS test;
 
 -- ============================================
--- 1. TABELA: categories
+-- 1. TABELA: user_profile
+-- ============================================
+CREATE TABLE user_profile (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    main_salary REAL NOT NULL CHECK(main_salary >= 0),
+    other_income REAL DEFAULT 0 CHECK(other_income >= 0),
+    periodicity TEXT NOT NULL CHECK(periodicity IN ('monthly', 'biweekly')),
+    savings_goal REAL DEFAULT 0 CHECK(savings_goal >= 0),
+    investment_goal REAL DEFAULT 0 CHECK(investment_goal >= 0),
+    emergency_fund_goal REAL DEFAULT 0 CHECK(emergency_fund_goal >= 0),
+    onboarding_completed BOOLEAN DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- 2. TABELA: categories
 -- ============================================
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +39,7 @@ CREATE TABLE categories (
 );
 
 -- ============================================
--- 2. TABELA: transactions
+-- 3. TABELA: transactions
 -- ============================================
 CREATE TABLE transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +55,7 @@ CREATE TABLE transactions (
 );
 
 -- ============================================
--- 3. TABELA: budgets
+-- 4. TABELA: budgets
 -- ============================================
 CREATE TABLE budgets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

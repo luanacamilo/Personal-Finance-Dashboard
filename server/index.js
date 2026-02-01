@@ -5,6 +5,7 @@ const { getDatabase } = require('./config/database');
 // Import routes
 const transactionRoutes = require('./routes/transactionRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const userProfileRoutes = require('./routes/userProfileRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -19,6 +20,7 @@ const db = getDatabase();
 // API Routes
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/user', userProfileRoutes);
 
 // Rota de status
 app.get('/api/status', (req, res) => {

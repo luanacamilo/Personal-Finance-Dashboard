@@ -1,0 +1,39 @@
+{
+  "name": "personal-finance-dashboard",
+  "version": "1.0.0",
+  "description": "A demo **Full Stack Personal Finance Dashboard** designed to showcase data modeling, business logic, and financial data visualization using modern web technologies.",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "vite",
+    "server": "nodemon server/index.js",
+    "init-db": "node database/init.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luanacamilo/Personal-Finance-Dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luanacamilo/Personal-Finance-Dashboard/issues"
+  },
+  "homepage": "https://github.com/luanacamilo/Personal-Finance-Dashboard#readme",
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "nodemon": "^3.1.11",
+    "typescript": "^5.9.3"
+  }
+}

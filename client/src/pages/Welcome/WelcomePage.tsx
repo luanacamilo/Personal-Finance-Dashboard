@@ -1,4 +1,4 @@
-import { useNavigate } from './OnboardingContext';
+import { useNavigate } from '../OnboardingContext';
 import './WelcomePage.css';
 
 export default function WelcomePage() {

@@ -52,9 +52,6 @@ class TransactionService {
     return this.db.prepare(query).all(...params);
   }
 
-  /**
-   * Buscar transação por ID
-   */
   getById(id) {
     return this.db.prepare(`
       SELECT 
@@ -72,9 +69,6 @@ class TransactionService {
     `).get(id);
   }
 
-  /**
-   * Criar nova transação
-   */
   create(data) {
     const { type, amount, category_id, date, description } = data;
     
@@ -88,9 +82,6 @@ class TransactionService {
     return this.getById(result.lastInsertRowid);
   }
 
-  /**
-   * Atualizar transação existente
-   */
   update(id, data) {
     const { type, amount, category_id, date, description } = data;
     
@@ -114,9 +105,6 @@ class TransactionService {
     return this.getById(id);
   }
 
-  /**
-   * Deletar transação
-   */
   delete(id) {
     const stmt = this.db.prepare('DELETE FROM transactions WHERE id = ?');
     const result = stmt.run(id);
@@ -124,9 +112,6 @@ class TransactionService {
     return result.changes > 0;
   }
 
-  /**
-   * Obter estatísticas gerais
-   */
   getStats(filters = {}) {
     let query = `
       SELECT 

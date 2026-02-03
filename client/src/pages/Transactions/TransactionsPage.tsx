@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { notifications } from '@mantine/notifications';
-import ConfirmDialog from '../components/ConfirmDialog';
-import transactionService from '../services/transactionService';
-import type { Transaction, Category, TransactionFilters } from '../types';
+import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
+import transactionService from '../../services/transactionService';
+import type { Transaction, Category, TransactionFilters } from '../../types';
 import './TransactionsPage.css';
 
 interface TransactionsPageProps {

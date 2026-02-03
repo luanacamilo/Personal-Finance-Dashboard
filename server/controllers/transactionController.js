@@ -1,10 +1,7 @@
 const transactionService = require('../services/transactionService');
 
 class TransactionController {
-  /**
-   * GET /api/transactions
-   * Listar todas as transações com filtros opcionais
-   */
+ 
   async getAll(req, res) {
     try {
       const filters = {
@@ -14,7 +11,6 @@ class TransactionController {
         endDate: req.query.endDate
       };
 
-      // Remover filtros undefined
       Object.keys(filters).forEach(key => {
         if (filters[key] === null || filters[key] === undefined) {
           delete filters[key];
@@ -37,10 +33,6 @@ class TransactionController {
     }
   }
 
-  /**
-   * GET /api/transactions/:id
-   * Buscar transação por ID
-   */
   async getById(req, res) {
     try {
       const { id } = req.params;
@@ -66,15 +58,11 @@ class TransactionController {
     }
   }
 
-  /**
-   * POST /api/transactions
-   * Criar nova transação
-   */
+
   async create(req, res) {
     try {
       const { type, amount, category_id, date, description } = req.body;
 
-      // Validações básicas
       if (!type || !['income', 'expense'].includes(type)) {
         return res.status(400).json({
           success: false,
@@ -131,17 +119,11 @@ class TransactionController {
       });
     }
   }
-
-  /**
-   * PUT /api/transactions/:id
-   * Atualizar transação existente
-   */
   async update(req, res) {
     try {
       const { id } = req.params;
       const { type, amount, category_id, date, description } = req.body;
 
-      // Validações básicas
       if (type && !['income', 'expense'].includes(type)) {
         return res.status(400).json({
           success: false,
@@ -192,10 +174,6 @@ class TransactionController {
     }
   }
 
-  /**
-   * DELETE /api/transactions/:id
-   * Deletar transação
-   */
   async delete(req, res) {
     try {
       const { id } = req.params;
@@ -221,10 +199,6 @@ class TransactionController {
     }
   }
 
-  /**
-   * GET /api/transactions/stats
-   * Obter estatísticas das transações
-   */
   async getStats(req, res) {
     try {
       const filters = {
@@ -232,7 +206,6 @@ class TransactionController {
         endDate: req.query.endDate
       };
 
-      // Remover filtros undefined
       Object.keys(filters).forEach(key => {
         if (!filters[key]) delete filters[key];
       });

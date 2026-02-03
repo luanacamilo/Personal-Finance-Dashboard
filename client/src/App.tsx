@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import Sidebar from './components/Sidebar'
-import Footer from './components/Footer'
-import DashboardPage from './pages/DashboardPage'
-import TransactionsPage from './pages/TransactionsPage'
-import WelcomePage from './pages/WelcomePage'
-import SetupPage from './pages/SetupPage'
+import Sidebar from './components/Sidebar/Sidebar'
+import Footer from './components/Footer/Footer'
+import DashboardPage from './pages/Dashboard/DashboardPage'
+import TransactionsPage from './pages/Transactions/TransactionsPage'
+import WelcomePage from './pages/Welcome/WelcomePage'
+import SetupPage from './pages/Setup/SetupPage'
 import { OnboardingProvider } from './pages/OnboardingContext'
 import categoryService from './services/categoryService'
 import userProfileService from './services/userProfileService'
@@ -24,7 +24,6 @@ function App() {
 
   const loadInitialData = async () => {
     try {
-      // Check onboarding status
       const status = await userProfileService.checkOnboardingStatus()
       setOnboardingCompleted(status.completed)
       
@@ -36,6 +35,7 @@ function App() {
       setCategories(data)
     } catch (error) {
       console.error('Failed to load initial data:', error)
+      // Continua mesmo com erro para não ficar travado
     } finally {
       setLoading(false)
     }
@@ -58,8 +58,6 @@ function App() {
       </div>
     )
   }
-
-  // Show onboarding flow if not completed
   if (!onboardingCompleted) {
     return (
       <OnboardingProvider navigate={handleOnboardingNavigate}>

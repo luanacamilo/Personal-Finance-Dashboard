@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
-import userProfileService from '../services/userProfileService';
-import { useNavigate } from './OnboardingContext';
+import userProfileService from '../../services/userProfileService';
+import { useNavigate } from '../OnboardingContext';
 import './SetupPage.css';
 
 export default function SetupPage() {
@@ -31,11 +31,6 @@ export default function SetupPage() {
     });
   };
 
-  const parseFormattedCurrency = (value: string): string => {
-    
-    return value.replace(/,/g, '');
-  };
-
   const handleCurrencyChange = (field: string, value: string) => {
 
     const cleanValue = value.replace(/[^\d.]/g, '');
@@ -60,7 +55,7 @@ export default function SetupPage() {
 
   const handleSubmit = async () => {
     try {
-      await userProfileService.saveProfile({
+      console.log('Saving profile with data:', {
         main_salary: parseFloat(formData.main_salary),
         other_income: formData.other_income ? parseFloat(formData.other_income) : 0,
         periodicity: formData.periodicity,
@@ -68,6 +63,17 @@ export default function SetupPage() {
         investment_goal: formData.investment_goal ? parseFloat(formData.investment_goal) : 0,
         emergency_fund_goal: formData.emergency_fund_goal ? parseFloat(formData.emergency_fund_goal) : 0,
       });
+
+      const response = await userProfileService.saveProfile({
+        main_salary: parseFloat(formData.main_salary),
+        other_income: formData.other_income ? parseFloat(formData.other_income) : 0,
+        periodicity: formData.periodicity,
+        savings_goal: formData.savings_goal ? parseFloat(formData.savings_goal) : 0,
+        investment_goal: formData.investment_goal ? parseFloat(formData.investment_goal) : 0,
+        emergency_fund_goal: formData.emergency_fund_goal ? parseFloat(formData.emergency_fund_goal) : 0,
+      });
+
+      console.log('Profile saved successfully:', response);
 
       notifications.show({
         title: 'Success',
@@ -77,6 +83,7 @@ export default function SetupPage() {
 
       navigate('dashboard');
     } catch (error) {
+      console.error('Error saving profile:', error);
       notifications.show({
         title: 'Error',
         message: error instanceof Error ? error.message : 'Failed to save profile',

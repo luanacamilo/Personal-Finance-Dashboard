@@ -5,6 +5,8 @@ const { getDatabase } = require('./config/database');
 const transactionRoutes = require('./routes/transactionRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const userProfileRoutes = require('./routes/userProfileRoutes');
+const bankAccountRoutes = require('./routes/bankAccountRoutes');
+const recurringTransactionRoutes = require('./routes/recurringTransactionRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -17,6 +19,8 @@ const db = getDatabase();
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/user', userProfileRoutes);
+app.use('/api/bank-accounts', bankAccountRoutes);
+app.use('/api/recurring-transactions', recurringTransactionRoutes);
 
 app.get('/api/status', (req, res) => {
   res.json({ 
@@ -28,15 +32,11 @@ app.get('/api/status', (req, res) => {
 
 app.get('/api/tables', (req, res) => {
   try {
-    const tables = db.prepare(`
-      SELECT name FROM sqlite_master 
-      WHERE type='table' 
-      ORDER BY name
-    `).all();
+    const tables = Object.keys(db.data);
     
     res.json({ 
       success: true,
-      tables: tables.map(t => t.name)
+      tables: tables
     });
   } catch (error) {
     res.status(500).json({ 
@@ -55,13 +55,11 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(` Servidor rodando na porta ${PORT}`);
-  console.log(` API: http://localhost:${PORT}/api`);
-  console.log(` Transactions: http://localhost:${PORT}/api/transactions`);
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`📡 API: http://localhost:${PORT}/api`);
 });
 
 process.on('SIGINT', () => {
-  db.close();
-  console.log('\n Servidor encerrado');
+  console.log('\n✋ Server stopped');
   process.exit(0);
 });

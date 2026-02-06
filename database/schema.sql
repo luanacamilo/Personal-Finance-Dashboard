@@ -7,6 +7,8 @@
 DROP VIEW IF EXISTS v_budget_status;
 DROP VIEW IF EXISTS v_expenses_by_category;
 DROP VIEW IF EXISTS v_current_balance;
+DROP TABLE IF EXISTS recurring_transactions;
+DROP TABLE IF EXISTS bank_accounts;
 DROP TABLE IF EXISTS budgets;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS categories;
@@ -18,6 +20,8 @@ DROP TABLE IF EXISTS test;
 -- ============================================
 CREATE TABLE user_profile (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    country TEXT DEFAULT 'Brazil',
+    currency TEXT DEFAULT 'BRL',
     main_salary REAL NOT NULL CHECK(main_salary >= 0),
     other_income REAL DEFAULT 0 CHECK(other_income >= 0),
     periodicity TEXT NOT NULL CHECK(periodicity IN ('monthly', 'biweekly')),
@@ -55,7 +59,46 @@ CREATE TABLE transactions (
 );
 
 -- ============================================
--- 4. TABELA: budgets
+-- 4. TABELA: bank_accounts
+-- ============================================
+CREATE TABLE bank_accounts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    account_type TEXT NOT NULL CHECK(account_type IN ('checking', 'savings', 'investment', 'other')),
+    initial_balance REAL NOT NULL DEFAULT 0,
+    current_balance REAL NOT NULL DEFAULT 0,
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- 5. TABELA: recurring_transactions
+-- ============================================
+CREATE TABLE recurring_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT NOT NULL CHECK(type IN ('income', 'expense')),
+    description TEXT NOT NULL,
+    amount REAL NOT NULL CHECK(amount > 0),
+    category_id INTEGER NOT NULL,
+CREATE INDEX idx_recurring_active ON recurring_transactions(is_active);
+CREATE INDEX idx_recurring_frequency ON recurring_transactions(frequency);
+CREATE INDEX idx_bank_accounts_active ON bank_accounts(is_active);
+    bank_account_id INTEGER,
+    frequency TEXT NOT NULL CHECK(frequency IN ('daily', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly')),
+    start_date DATE NOT NULL,
+    end_date DATE,
+    day_of_month INTEGER CHECK(day_of_month BETWEEN 1 AND 31),
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE SET NULL
+);
+
+-- ============================================
+-- 6. TABELA: budgets
 -- ============================================
 CREATE TABLE budgets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,13 +136,23 @@ INSERT INTO categories (name) VALUES
     ('Educação'),
     ('Outros');
 
--- ============================================
--- DADOS DE EXEMPLO (opcional)
--- ============================================
+-- =========bank_accounts (name, account_type, initial_balance, current_balance) VALUES
+    ('Conta Corrente', 'checking', 5000.00, 5000.00),
+    ('Poupança', 'savings', 10000.00, 10000.00),
+    ('Investimentos', 'investment', 20000.00, 20000.00);
+
+INSERT INTO recurring_transactions (type, description, amount, category_id, bank_account_id, frequency, start_date, day_of_month, is_active) VALUES
+    ('income', 'Salary', 5000.00, 1, 1, 'monthly', '2026-01-05', 5, 1),
+    ('expense', 'Rent', 1200.00, 6, 1, 'monthly', '2026-01-01', 1, 1),
+    ('expense', 'Internet', 120.00, 10, 1, 'monthly', '2026-01-10', 10, 1);
+
 INSERT INTO transactions (type, amount, category_id, date, description) VALUES
-    ('income', 5000.00, 1, '2026-01-05', 'Salário Janeiro'),
-    ('income', 1500.00, 2, '2026-01-15', 'Projeto Freelance'),
-    ('expense', 450.00, 4, '2026-01-10', 'Supermercado'),
+    ('income', 5000.00, 1, '2026-01-05', 'Salary January'),
+    ('income', 1500.00, 2, '2026-01-15', 'Freelance Project'),
+    ('expense', 450.00, 4, '2026-01-10', 'Supermarket'),
+    ('expense', 200.00, 5, '2026-01-12', 'Fuel'),
+    ('expense', 1200.00, 6, '2026-01-01', 'Rent'),
+    ('expense', 150.00, 7, '2026-01-20', 'Cinema and dinner
     ('expense', 200.00, 5, '2026-01-12', 'Combustível'),
     ('expense', 1200.00, 6, '2026-01-01', 'Aluguel'),
     ('expense', 150.00, 7, '2026-01-20', 'Cinema e restaurante');

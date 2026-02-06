@@ -1,24 +1,14 @@
 const { getDatabase } = require('../config/database');
 
 class CategoryService {
-  constructor() {
-    this.db = getDatabase();
-  }
-
   getAll() {
-    return this.db.prepare(`
-      SELECT id, name, created_at
-      FROM categories
-      ORDER BY name
-    `).all();
+    const db = getDatabase();
+    return db.data.categories || [];
   }
 
   getById(id) {
-    return this.db.prepare(`
-      SELECT id, name, created_at
-      FROM categories
-      WHERE id = ?
-    `).get(id);
+    const db = getDatabase();
+    return (db.data.categories || []).find(c => c.id === parseInt(id));
   }
 }
 

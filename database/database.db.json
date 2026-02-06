@@ -1,0 +1,135 @@
+{
+  "users": [],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Salary",
+      "created_at": "2026-02-06T14:28:26.274Z"
+    },
+    {
+      "id": 2,
+      "name": "Freelance",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 3,
+      "name": "Investments",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 4,
+      "name": "Food",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 5,
+      "name": "Transport",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 6,
+      "name": "Housing",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 7,
+      "name": "Entertainment",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 8,
+      "name": "Health",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 9,
+      "name": "Education",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 10,
+      "name": "Others",
+      "created_at": "2026-02-06T14:28:26.275Z"
+    }
+  ],
+  "transactions": [],
+  "bank_accounts": [
+    {
+      "id": 1,
+      "name": "Checking Account",
+      "account_type": "checking",
+      "initial_balance": 5000,
+      "current_balance": 5000,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 2,
+      "name": "Savings",
+      "account_type": "savings",
+      "initial_balance": 10000,
+      "current_balance": 10000,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 3,
+      "name": "Investments",
+      "account_type": "investment",
+      "initial_balance": 20000,
+      "current_balance": 20000,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    }
+  ],
+  "recurring_transactions": [
+    {
+      "id": 1,
+      "type": "income",
+      "description": "Salary",
+      "amount": 5000,
+      "category_id": 1,
+      "bank_account_id": 1,
+      "frequency": "monthly",
+      "start_date": "2026-02-05",
+      "end_date": null,
+      "day_of_month": 5,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 2,
+      "type": "expense",
+      "description": "Rent",
+      "amount": 1200,
+      "category_id": 6,
+      "bank_account_id": 1,
+      "frequency": "monthly",
+      "start_date": "2026-02-01",
+      "end_date": null,
+      "day_of_month": 1,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    },
+    {
+      "id": 3,
+      "type": "expense",
+      "description": "Internet",
+      "amount": 120,
+      "category_id": 10,
+      "bank_account_id": 1,
+      "frequency": "monthly",
+      "start_date": "2026-02-10",
+      "end_date": null,
+      "day_of_month": 10,
+      "is_active": 1,
+      "created_at": "2026-02-06T14:28:26.275Z",
+      "updated_at": "2026-02-06T14:28:26.275Z"
+    }
+  ]
+}

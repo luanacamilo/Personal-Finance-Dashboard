@@ -1,141 +1,139 @@
 const { getDatabase } = require('../config/database');
 
 class TransactionService {
-  constructor() {
-    this.db = getDatabase();
-  }
-
-  /**
-   * Buscar todas as transações com filtros opcionais
-   * @param {Object} filters - { type, category_id, startDate, endDate }
-   */
   getAll(filters = {}) {
-    let query = `
-      SELECT 
-        t.id,
-        t.type,
-        t.amount,
-        t.category_id,
-        c.name as category_name,
-        t.date,
-        t.description,
-        t.created_at
-      FROM transactions t
-      INNER JOIN categories c ON t.category_id = c.id
-      WHERE 1=1
-    `;
+    const db = getDatabase();
+    let transactions = db.data.transactions || [];
     
-    const params = [];
-
     if (filters.type) {
-      query += ` AND t.type = ?`;
-      params.push(filters.type);
+      transactions = transactions.filter(t => t.type === filters.type);
     }
 
     if (filters.category_id) {
-      query += ` AND t.category_id = ?`;
-      params.push(filters.category_id);
+      transactions = transactions.filter(t => t.category_id === parseInt(filters.category_id));
     }
 
     if (filters.startDate) {
-      query += ` AND t.date >= ?`;
-      params.push(filters.startDate);
+      transactions = transactions.filter(t => new Date(t.date) >= new Date(filters.startDate));
     }
 
     if (filters.endDate) {
-      query += ` AND t.date <= ?`;
-      params.push(filters.endDate);
+      transactions = transactions.filter(t => new Date(t.date) <= new Date(filters.endDate));
     }
 
-    query += ` ORDER BY t.date DESC, t.id DESC`;
+    // Join with categories
+    transactions = transactions.map(t => {
+      const category = (db.data.categories || []).find(c => c.id === t.category_id);
+      return {
+        ...t,
+        category_name: category ? category.name : 'Unknown'
+      };
+    });
 
-    return this.db.prepare(query).all(...params);
+    return transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
   }
 
   getById(id) {
-    return this.db.prepare(`
-      SELECT 
-        t.id,
-        t.type,
-        t.amount,
-        t.category_id,
-        c.name as category_name,
-        t.date,
-        t.description,
-        t.created_at
-      FROM transactions t
-      INNER JOIN categories c ON t.category_id = c.id
-      WHERE t.id = ?
-    `).get(id);
+    const db = getDatabase();
+    const transaction = (db.data.transactions || []).find(t => t.id === parseInt(id));
+    if (transaction) {
+      const category = (db.data.categories || []).find(c => c.id === transaction.category_id);
+      return {
+        ...transaction,
+        category_name: category ? category.name : 'Unknown'
+      };
+    }
+    return null;
   }
 
   create(data) {
+    const db = getDatabase();
     const { type, amount, category_id, date, description } = data;
     
-    const stmt = this.db.prepare(`
-      INSERT INTO transactions (type, amount, category_id, date, description)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-    
-    const result = stmt.run(type, amount, category_id, date, description || null);
-    
-    return this.getById(result.lastInsertRowid);
+    if (!type || !['income', 'expense'].includes(type)) {
+      throw new Error('Type must be income or expense');
+    }
+    if (!amount || amount <= 0) {
+      throw new Error('Amount must be positive');
+    }
+    if (!category_id) {
+      throw new Error('Category is required');
+    }
+    if (!date) {
+      throw new Error('Date is required');
+    }
+
+    if (!db.data.transactions) {
+      db.data.transactions = [];
+    }
+
+    const now = new Date().toISOString();
+    const newTransaction = {
+      id: Math.max(0, ...db.data.transactions.map(t => t.id)) + 1,
+      type,
+      amount: parseFloat(amount),
+      category_id: parseInt(category_id),
+      date,
+      description: description || null,
+      created_at: now,
+      updated_at: now
+    };
+
+    db.data.transactions.push(newTransaction);
+    db.saveData();
+
+    return this.getById(newTransaction.id);
   }
 
   update(id, data) {
+    const db = getDatabase();
     const { type, amount, category_id, date, description } = data;
     
-    const stmt = this.db.prepare(`
-      UPDATE transactions 
-      SET type = ?,
-          amount = ?,
-          category_id = ?,
-          date = ?,
-          description = ?,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `);
-    
-    const result = stmt.run(type, amount, category_id, date, description || null, id);
-    
-    if (result.changes === 0) {
-      return null;
-    }
-    
+    const index = (db.data.transactions || []).findIndex(t => t.id === parseInt(id));
+    if (index === -1) return null;
+
+    const now = new Date().toISOString();
+    db.data.transactions[index] = {
+      ...db.data.transactions[index],
+      type: type || db.data.transactions[index].type,
+      amount: amount ? parseFloat(amount) : db.data.transactions[index].amount,
+      category_id: category_id ? parseInt(category_id) : db.data.transactions[index].category_id,
+      date: date || db.data.transactions[index].date,
+      description: description !== undefined ? description : db.data.transactions[index].description,
+      updated_at: now
+    };
+
+    db.saveData();
     return this.getById(id);
   }
 
   delete(id) {
-    const stmt = this.db.prepare('DELETE FROM transactions WHERE id = ?');
-    const result = stmt.run(id);
-    
-    return result.changes > 0;
+    const db = getDatabase();
+    const index = (db.data.transactions || []).findIndex(t => t.id === parseInt(id));
+    if (index === -1) return false;
+
+    db.data.transactions.splice(index, 1);
+    db.saveData();
+    return true;
   }
 
   getStats(filters = {}) {
-    let query = `
-      SELECT 
-        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as total_income,
-        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expense,
-        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) as balance,
-        COUNT(*) as transaction_count
-      FROM transactions
-      WHERE 1=1
-    `;
+    const transactions = this.getAll(filters);
     
-    const params = [];
-
-    if (filters.startDate) {
-      query += ` AND date >= ?`;
-      params.push(filters.startDate);
-    }
-
-    if (filters.endDate) {
-      query += ` AND date <= ?`;
-      params.push(filters.endDate);
-    }
-
-    return this.db.prepare(query).get(...params);
+    const total_income = transactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    const total_expense = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    return {
+      total_income,
+      total_expense,
+      balance: total_income - total_expense,
+      transaction_count: transactions.length
+    };
   }
 }
 
